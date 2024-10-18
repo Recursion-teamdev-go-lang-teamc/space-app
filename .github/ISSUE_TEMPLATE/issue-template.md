@@ -1,5 +1,5 @@
 ---
-name: タスク
+name: Template
 about: プロジェクトタスクを作成するためのテンプレート
 title: "[カテゴリ] 実装する機能名"
 labels: task
