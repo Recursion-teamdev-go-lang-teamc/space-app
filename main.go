@@ -43,8 +43,12 @@ func apodHandler(w http.ResponseWriter, r *http.Request) {
 		slog.Error("Parse Error")
 	}
 
+	query := r.URL.Query()
+	date := query.Get("date")
+
 	q := u.Query()
 	q.Set("api_key", apiKey)
+	q.Set("date", date)
 
 	u.RawQuery = q.Encode()
 
