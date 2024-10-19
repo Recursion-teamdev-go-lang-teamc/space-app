@@ -12,6 +12,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+var apiKey = loadAPIKEY()
+
 type Apod struct {
 	CopyRight       string `json:"copyright"`
 	Date            string `json:"date"`
@@ -23,14 +25,16 @@ type Apod struct {
 	Url             string `json:"url"`
 }
 
-func apodHandler(w http.ResponseWriter, r *http.Request) {
-
+func loadAPIKEY() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
 	apiKey := os.Getenv("API_KEY")
+	return apiKey
+}
+
+func apodHandler(w http.ResponseWriter, r *http.Request) {
 
 	var apod Apod
 
@@ -70,7 +74,6 @@ func apodHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
 	http.HandleFunc("/api/apod", apodHandler)
 	http.ListenAndServe(":8000", nil)
 }
