@@ -1,4 +1,4 @@
-async function fetchADOP() {
+async function fetchAPOD() {
     let url = new URL("http://localhost:8000/api/apod");
     const date = document.getElementById("date").value
     const params = new URLSearchParams({
