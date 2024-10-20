@@ -2,12 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"log/slog"
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -45,6 +47,9 @@ func apodHandler(w http.ResponseWriter, r *http.Request) {
 
 	query := r.URL.Query()
 	date := query.Get("date")
+	if date != "" {
+		date = convertDateFormat(date)
+	}
 
 	q := u.Query()
 	q.Set("api_key", apiKey)
@@ -75,6 +80,16 @@ func apodHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(response)
+}
+
+func convertDateFormat(prev string) string {
+	prevLayout := "01/02/2006"
+	t, err := time.Parse(prevLayout, prev)
+	if err != nil {
+		fmt.Println("Error parsing date:", err)
+	}
+	formatted := t.Format("2006-01-02")
+	return formatted
 }
 
 func main() {
