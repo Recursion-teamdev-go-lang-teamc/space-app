@@ -24,7 +24,6 @@ paths:
           required: true
           schema:
             type: string
-          
       responses:
         '200':
           description: Successfully retrieved APOD data.
@@ -63,6 +62,141 @@ paths:
                         type: string
                         format: uri
                         example: "https://apod.nasa.gov/apod/image/2410/C2023A3-in-the-past-6-days_1100.jpg"
+        '400':
+          description: Invalid date format.
+        '500':
+          description: Internal server error.
+  /apods/days:
+    get:
+      summary: Get Consective days APODS List
+      description: Retrieve the APOD for few days from NASA's API.
+      parameters:
+        - name: start_date
+          in: query
+          description: The start date of the APOD list (YYYY-MM-DD).
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: The end date of the APOD (YYYY-MM-DD).
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: api_key
+          in: query
+          description: The API KEY for NASA API
+          required: true
+          schema:
+            type: string
+          
+      responses:
+        '200':
+          description: Successfully retrieved APOD data.
+          content:
+            application/json:
+              schema:
+                type: array
+                description: return APODS from start_date to end_date
+                items:
+                  type: object
+                  properties:
+                    apod:
+                      type: object
+                      properties:
+                        copyright:
+                          type: string
+                          example: "Xingyang Cai"
+                        date:
+                          type: string
+                          format: date
+                          example: "2024-10-19"
+                        explanation:
+                          type: string
+                          example: "These six panels follow daily apparitions of comet C/2023 A3 Tsuchinshan-ATLAS as it moved away from our fair planet during the past week. The images were taken with the same camera and lens at the indicated dates and locations from California, planet Earth. At far right on October 12 the visitor from the distant Oort cloud was near its closest approach, some 70 million kilometers (about 4 light-minutes) away. Its bright coma and long dust tail were close on the sky to the setting Sun but still easy to spot against a bright western horizon. Over the following days, the outbound comet steadily climbs above the ecliptic and north into the darker western evening sky, but begins to fade from view. Crossing the Earth's orbital plane around October 14, Tsuchinshan-ATLAS exhibits a noticeable antitail extended toward the western horizon. Higher in the evening sky at sunset by October 17 (far left) the comet has faded and reached a distance of around 77 million kilometers from planet Earth. Hopefully you enjoyed some of Tsuchinshan-ATLAS's bid to become the best comet of 2024. This comet's initial orbital period estimates were a mere 80,000 years, but in fact it may never return to the inner Solar System.   Growing Gallery: Comet Tsuchinshan-ATLAS in 2024"
+                        hdurl:
+                          type: string
+                          format: uri
+                          example: "https://apod.nasa.gov/apod/image/2410/C2023A3-in-the-past-6-days.jpg"
+                        media_type:
+                          type: string
+                          example: "image"
+                        service_version:
+                          type: string
+                          example: "v1"
+                        title:
+                          type: string
+                          example: "Comet Tsuchinshan-ATLAS Flys Away"
+                        url:
+                          type: string
+                          format: uri
+                          example: "https://apod.nasa.gov/apod/image/2410/C2023A3-in-the-past-6-days_1100.jpg"
+        '400':
+          description: Invalid date format.
+        '500':
+          description: Internal server error.
+
+  /apods/random:
+    get:
+      summary: Get Random APODS List
+      description: Retrieve the APODS from NASA's API.
+      parameters:
+        - name: connt
+          in: query
+          description: A specified count of randomly chosen images will be returned.
+          required: false
+          schema:
+            type: integer
+            format: int
+        - name: api_key
+          in: query
+          description: The API KEY for NASA API
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved APOD data.
+          content:
+            application/json:
+              schema:
+                type: array
+                description: array内にcount個のAPODが含まれる
+                items:
+                  type: object
+                  properties:
+                    apod:
+                      type: object
+                      properties:
+                        copyright:
+                          type: string
+                          example: "Xingyang Cai"
+                        date:
+                          type: string
+                          format: date
+                          example: "2024-10-19"
+                        explanation:
+                          type: string
+                          example: "These six panels follow daily apparitions of comet C/2023 A3 Tsuchinshan-ATLAS as it moved away from our fair planet during the past week. The images were taken with the same camera and lens at the indicated dates and locations from California, planet Earth. At far right on October 12 the visitor from the distant Oort cloud was near its closest approach, some 70 million kilometers (about 4 light-minutes) away. Its bright coma and long dust tail were close on the sky to the setting Sun but still easy to spot against a bright western horizon. Over the following days, the outbound comet steadily climbs above the ecliptic and north into the darker western evening sky, but begins to fade from view. Crossing the Earth's orbital plane around October 14, Tsuchinshan-ATLAS exhibits a noticeable antitail extended toward the western horizon. Higher in the evening sky at sunset by October 17 (far left) the comet has faded and reached a distance of around 77 million kilometers from planet Earth. Hopefully you enjoyed some of Tsuchinshan-ATLAS's bid to become the best comet of 2024. This comet's initial orbital period estimates were a mere 80,000 years, but in fact it may never return to the inner Solar System.   Growing Gallery: Comet Tsuchinshan-ATLAS in 2024"
+                        hdurl:
+                          type: string
+                          format: uri
+                          example: "https://apod.nasa.gov/apod/image/2410/C2023A3-in-the-past-6-days.jpg"
+                        media_type:
+                          type: string
+                          example: "image"
+                        service_version:
+                          type: string
+                          example: "v1"
+                        title:
+                          type: string
+                          example: "Comet Tsuchinshan-ATLAS Flys Away"
+                        url:
+                          type: string
+                          format: uri
+                          example: "https://apod.nasa.gov/apod/image/2410/C2023A3-in-the-past-6-days_1100.jpg"
         '400':
           description: Invalid date format.
         '500':
