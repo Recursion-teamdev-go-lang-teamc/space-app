@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"log/slog"
@@ -13,6 +12,8 @@ import (
 
 	"github.com/joho/godotenv"
 )
+
+const apodURL = "https://api.nasa.gov/planetary/apod"
 
 var apiKey = loadAPIKEY()
 
@@ -36,41 +37,54 @@ func loadAPIKEY() string {
 	return apiKey
 }
 
+// TODO: write apods function
+func apodsHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func apodHandler(w http.ResponseWriter, r *http.Request) {
 
 	var apod Apod
 
-	u, err := url.Parse("https://api.nasa.gov/planetary/apod")
+	nasaAPIURL, err := url.Parse(apodURL)
 	if err != nil {
-		slog.Error("Parse Error")
+		slog.Error("Parse Error", "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 
-	query := r.URL.Query()
-	date := query.Get("date")
+	reqQuery := r.URL.Query()
+	date := reqQuery.Get("date")
 	if date != "" {
-		date = convertDateFormat(date)
+		date, err = convertDateFormat(date)
+		if err != nil {
+			slog.Error("Date format error", "error", err)
+			http.Error(w, "Bad Request", http.StatusBadRequest)
+		}
 	}
 
-	q := u.Query()
-	q.Set("api_key", apiKey)
-	q.Set("date", date)
+	nasaAPIQuery := nasaAPIURL.Query()
+	nasaAPIQuery.Set("api_key", apiKey)
+	nasaAPIQuery.Set("date", date)
 
-	u.RawQuery = q.Encode()
+	nasaAPIURL.RawQuery = nasaAPIQuery.Encode()
 
-	res, err := http.Get(u.String())
+	res, err := http.Get(nasaAPIURL.String())
 	if err != nil {
-		slog.Error("Requet Error")
+		slog.Error("Requet Error", "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != 200 {
-		slog.Error("HTTP Error")
+	if res.StatusCode != http.StatusOK {
+		slog.Error("HTTP Error", "error", err)
+		http.Error(w, "Service Unavailable", http.StatusServiceUnavailable)
 	}
 
 	body, _ := io.ReadAll(res.Body)
 
 	if err := json.Unmarshal(body, &apod); err != nil {
-		slog.Error("Error")
+		slog.Error("Json Unmarshal Error", "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 
 	response := map[string]Apod{
@@ -82,17 +96,18 @@ func apodHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func convertDateFormat(prev string) string {
+func convertDateFormat(prev string) (string, error) {
 	prevLayout := "01/02/2006"
 	t, err := time.Parse(prevLayout, prev)
 	if err != nil {
-		fmt.Println("Error parsing date:", err)
+		return "", err
 	}
 	formatted := t.Format("2006-01-02")
-	return formatted
+	return formatted, nil
 }
 
 func main() {
 	http.HandleFunc("/api/apod", apodHandler)
+	http.HandleFunc("/api/apods", apodsHandler)
 	http.ListenAndServe(":8000", nil)
 }
