@@ -26,28 +26,33 @@ async function fetchAPOD() {
         const json = await response.json();
         const apod = json.apod;
         const apodContainer = document.getElementById('apod-container');
-        console.log(apod.hdurl)
-        console.log(apod.title)
-        console.log(apod.explanation)
-
-        getAPODCardHTML(apodContainer)
-
+        apodContainer.innerHTML = `
+            <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
+            <img class="py-2" src="${apod.hdurl}" alt="${apod.title}">
+            <p class="text-white py-2">${apod.explanation}</p>
+        `;
     } catch (error) {
         console.error(error.message);
     }
 }
 
-function getAPODCardHTML(apodContainer) {
+// APODSのカード形式テスト用関数
+async function createAPODS() {
+    const apodsContainer = document.getElementById('apods-container');
+    createAPODCardHTML(apodsContainer)
+}
+
+function createAPODCardHTML(apodContainer) {
     apodList.forEach(apod => {
         const card = document.createElement("div")
         card.className = "mx-3 mt-6 flex flex-col self-start rounded-lg shadow-xl"
         card.innerHTML = `
             <a href="#!">
-                <img 
+                <img
                     class="rounded-t-lg"
                     src=${apod.hdurl}
                     alt=${apod.title}/>
-                <div class="p-6">
+                <div class="text-white p-6">
                     <h2 class="mb-2 text-xl font-medium leading-tight">
                     ${apod.title}
                     </h2>
