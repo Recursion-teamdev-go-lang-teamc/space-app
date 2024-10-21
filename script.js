@@ -20,11 +20,18 @@ async function fetchADOP() {
         const apod = json.apod;
         const apodContainer = document.getElementById('apod-container');
 
-        apodContainer.innerHTML = `
+        if (apod.title === '') {
+            apodContainer.innerHTML = `
+                <p style="color: red;">エラー: APODデータが存在しません。日付を確認してください。</p>
+            `;
+        } else {
+            apodContainer.innerHTML = `
             <h2>${apod.title}</h2>
             <img src="${apod.hdurl}" alt="${apod.title}">
             <p>${apod.explanation}</p>
         `;
+        }
+        
     } catch (error) {
         console.error(error.message);
     }
