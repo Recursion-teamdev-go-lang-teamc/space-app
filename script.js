@@ -1,4 +1,4 @@
-async function fetchADOP() {
+async function fetchAPOD() {
     let url = new URL("http://localhost:8000/api/apod");
     const date = document.getElementById("date").value
     const params = new URLSearchParams({
@@ -26,9 +26,9 @@ async function fetchADOP() {
             `;
         } else {
             apodContainer.innerHTML = `
-            <h2>${apod.title}</h2>
-            <img src="${apod.hdurl}" alt="${apod.title}">
-            <p>${apod.explanation}</p>
+            <h2 class="text-center text-2xl py-2">${apod.title}</h2>
+            <img class="py-2" src="${apod.hdurl}" alt="${apod.title}">
+            <p class="py-2">${apod.explanation}</p>
         `;
         }
         
