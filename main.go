@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"log/slog"
@@ -44,47 +45,18 @@ func apodsHandler(w http.ResponseWriter, r *http.Request) {
 
 func apodHandler(w http.ResponseWriter, r *http.Request) {
 
-	var apod Apod
-
-	nasaAPIURL, err := url.Parse(apodURL)
+	date, err := getDateFromQuery(r)
 	if err != nil {
-		slog.Error("Parse Error", "error", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		slog.Error("Date format error", "error", err)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
 	}
 
-	reqQuery := r.URL.Query()
-	date := reqQuery.Get("date")
-	if date != "" {
-		date, err = convertDateFormat(date)
-		if err != nil {
-			slog.Error("Date format error", "error", err)
-			http.Error(w, "Bad Request", http.StatusBadRequest)
-		}
-	}
+	fmt.Println("test")
 
-	nasaAPIQuery := nasaAPIURL.Query()
-	nasaAPIQuery.Set("api_key", apiKey)
-	nasaAPIQuery.Set("date", date)
-
-	nasaAPIURL.RawQuery = nasaAPIQuery.Encode()
-
-	res, err := http.Get(nasaAPIURL.String())
+	apod, err := fetchApodData(date)
 	if err != nil {
-		slog.Error("Requet Error", "error", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode != http.StatusOK {
-		slog.Error("HTTP Error", "error", err)
-		http.Error(w, "Service Unavailable", http.StatusServiceUnavailable)
-	}
-
-	body, _ := io.ReadAll(res.Body)
-
-	if err := json.Unmarshal(body, &apod); err != nil {
-		slog.Error("Json Unmarshal Error", "error", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		slog.Error("Error fetching APOD data", "error", err)
+		http.Error(w, "Bad Request", http.StatusServiceUnavailable)
 	}
 
 	response := map[string]Apod{
@@ -93,7 +65,64 @@ func apodHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(response)
+}
+
+func getDateFromQuery(r *http.Request) (string, error) {
+	reqQuery := r.URL.Query()
+	date := reqQuery.Get("date")
+	if date != "" {
+		return convertDateFormat(date)
+	}
+	return "", nil
+}
+
+func fetchApodData(date string) (Apod, error) {
+
+	var apod Apod
+
+	nasaAPIURL, err := buildApodURL(date)
+	if err != nil {
+		return apod, err
+	}
+
+	res, err := http.Get(nasaAPIURL)
+	if err != nil {
+		return apod, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return apod, fmt.Errorf("NASA API returns non 200 status: %d", res.StatusCode)
+	}
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return apod, err
+	}
+
+	if err := json.Unmarshal(body, &apod); err != nil {
+		return apod, err
+	}
+	return apod, nil
+}
+
+func buildApodURL(date string) (string, error) {
+
+	nasaAPIURL, err := url.Parse(apodURL)
+	if err != nil {
+		return "", err
+	}
+
+	nasaAPIQuery := nasaAPIURL.Query()
+	nasaAPIQuery.Set("api_key", apiKey)
+	nasaAPIQuery.Set("date", date)
+
+	nasaAPIURL.RawQuery = nasaAPIQuery.Encode()
+
+	return nasaAPIURL.String(), nil
+
 }
 
 func convertDateFormat(prev string) (string, error) {

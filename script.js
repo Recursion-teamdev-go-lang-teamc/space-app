@@ -15,8 +15,8 @@ async function fetchAPOD() {
             throw new Error(`response status: ${response.status}`);
         }
 
-        console.log(url.toString())
         const json = await response.json();
+        console.log(json)
         const apod = json.apod;
         const apodContainer = document.getElementById('apod-container');
 
