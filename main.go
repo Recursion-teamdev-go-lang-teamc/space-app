@@ -14,6 +14,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+const apodURL = "https://api.nasa.gov/planetary/apod"
+
 var apiKey = loadAPIKEY()
 
 type Apod struct {
@@ -36,41 +38,25 @@ func loadAPIKEY() string {
 	return apiKey
 }
 
+// TODO: write apods function
+func apodsHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func apodHandler(w http.ResponseWriter, r *http.Request) {
 
-	var apod Apod
-
-	u, err := url.Parse("https://api.nasa.gov/planetary/apod")
+	date, err := getDateFromQuery(r)
 	if err != nil {
-		slog.Error("Parse Error")
+		slog.Error("Date format error", "error", err)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
 	}
 
-	query := r.URL.Query()
-	date := query.Get("date")
-	if date != "" {
-		date = convertDateFormat(date)
-	}
+	fmt.Println("test")
 
-	q := u.Query()
-	q.Set("api_key", apiKey)
-	q.Set("date", date)
-
-	u.RawQuery = q.Encode()
-
-	res, err := http.Get(u.String())
+	apod, err := fetchApodData(date)
 	if err != nil {
-		slog.Error("Requet Error")
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode != 200 {
-		slog.Error("HTTP Error")
-	}
-
-	body, _ := io.ReadAll(res.Body)
-
-	if err := json.Unmarshal(body, &apod); err != nil {
-		slog.Error("Error")
+		slog.Error("Error fetching APOD data", "error", err)
+		http.Error(w, "Bad Request", http.StatusServiceUnavailable)
 	}
 
 	response := map[string]Apod{
@@ -79,20 +65,78 @@ func apodHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(response)
 }
 
-func convertDateFormat(prev string) string {
+func getDateFromQuery(r *http.Request) (string, error) {
+	reqQuery := r.URL.Query()
+	date := reqQuery.Get("date")
+	if date != "" {
+		return convertDateFormat(date)
+	}
+	return "", nil
+}
+
+func fetchApodData(date string) (Apod, error) {
+
+	var apod Apod
+
+	nasaAPIURL, err := buildApodURL(date)
+	if err != nil {
+		return apod, err
+	}
+
+	res, err := http.Get(nasaAPIURL)
+	if err != nil {
+		return apod, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return apod, fmt.Errorf("NASA API returns non 200 status: %d", res.StatusCode)
+	}
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return apod, err
+	}
+
+	if err := json.Unmarshal(body, &apod); err != nil {
+		return apod, err
+	}
+	return apod, nil
+}
+
+func buildApodURL(date string) (string, error) {
+
+	nasaAPIURL, err := url.Parse(apodURL)
+	if err != nil {
+		return "", err
+	}
+
+	nasaAPIQuery := nasaAPIURL.Query()
+	nasaAPIQuery.Set("api_key", apiKey)
+	nasaAPIQuery.Set("date", date)
+
+	nasaAPIURL.RawQuery = nasaAPIQuery.Encode()
+
+	return nasaAPIURL.String(), nil
+
+}
+
+func convertDateFormat(prev string) (string, error) {
 	prevLayout := "01/02/2006"
 	t, err := time.Parse(prevLayout, prev)
 	if err != nil {
-		fmt.Println("Error parsing date:", err)
+		return "", err
 	}
 	formatted := t.Format("2006-01-02")
-	return formatted
+	return formatted, nil
 }
 
 func main() {
 	http.HandleFunc("/api/apod", apodHandler)
+	http.HandleFunc("/api/apods", apodsHandler)
 	http.ListenAndServe(":8000", nil)
 }
