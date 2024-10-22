@@ -39,12 +39,13 @@ async function fetchAPOD() {
 // APODSのカード形式テスト用関数
 async function createAPODS() {
     const apodsContainer = document.getElementById('apods-container');
-    // init apodsContainer.innerHTML
-    apodsContainer.innerHTML = ``
     createAPODCardHTML(apodsContainer)
 }
 
 function createAPODCardHTML(apodContainer) {
+    // init apodsContainer.innerHTML
+    apodsContainer.innerHTML = ``
+    // create Apod card html
     apodList.forEach(apod => {
         const card = document.createElement("div")
         card.className = "mx-3 mt-6 flex flex-col self-start rounded-lg shadow-xl"
