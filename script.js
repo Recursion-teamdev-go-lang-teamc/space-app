@@ -19,21 +19,33 @@ async function fetchAPOD() {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(`response status: ${response.status}`);
+            throw new Error(`response status: ${response.status} - ${response.statusText}`);
         }
 
         const json = await response.json();
         console.log(json)
         const apod = json.apod;
-        const apodContainer = document.getElementById('apod-container');
-        apodContainer.innerHTML = `
-            <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
-            <img class="py-2" src="${apod.hdurl}" alt="${apod.title}">
-            <p class="text-white py-2">${apod.explanation}</p>
-        `;
+        displayApodData(apod);
     } catch (error) {
         console.error(error.message);
+        displayError(error.message);
     }
+}
+// レスポンス成功時に表示する関数
+function displayApodData(data){
+    const apodContainer = document.getElementById('apod-container');
+        apodContainer.innerHTML = `
+            <h2 class="text-white text-center text-2xl py-2">${data.title}</h2>
+            <img class="py-2" src="${data.hdurl}" alt="${data.title}">
+            <p class="text-white py-2">${data.explanation}</p>
+        `;
+}
+// レスポンス失敗時に表示する関数
+function displayError(errorMessage) {
+    const apodContainer = document.getElementById('apod-container');
+        apodContainer.innerHTML = `
+            <p style="color: red; text-align: center;">エラー :  ${errorMessage}</p>
+        `;
 }
 
 // APODSのカード形式テスト用関数

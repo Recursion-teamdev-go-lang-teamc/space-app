@@ -45,6 +45,15 @@ func apodsHandler(w http.ResponseWriter, r *http.Request) {
 
 func apodHandler(w http.ResponseWriter, r *http.Request) {
 
+	// CORSを有効化
+	enableCors(&w)
+
+	// プリフライトリクエストに対応
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	date, err := getDateFromQuery(r)
 	if err != nil {
 		slog.Error("Date format error", "error", err)
@@ -133,6 +142,12 @@ func convertDateFormat(prev string) (string, error) {
 	}
 	formatted := t.Format("2006-01-02")
 	return formatted, nil
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*") // どのオリジンでもアクセスを許可
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 }
 
 func main() {
