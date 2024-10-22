@@ -39,6 +39,8 @@ async function fetchAPOD() {
 // APODSのカード形式テスト用関数
 async function createAPODS() {
     const apodsContainer = document.getElementById('apods-container');
+    // init apodsContainer.innerHTML
+    apodsContainer.innerHTML = ``
     createAPODCardHTML(apodsContainer)
 }
 
