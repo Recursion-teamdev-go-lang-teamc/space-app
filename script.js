@@ -43,6 +43,9 @@ async function createAPODS() {
 }
 
 function createAPODCardHTML(apodContainer) {
+    // init apodsContainer.innerHTML
+    apodsContainer.innerHTML = ``
+    // create Apod card html
     apodList.forEach(apod => {
         const card = document.createElement("div")
         card.className = "mx-3 mt-6 flex flex-col self-start rounded-lg shadow-xl"
