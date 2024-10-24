@@ -47,8 +47,11 @@ async function fetchAPODs() {
         }
 
         const json = await response.json();
-        console.log(json)
+        console.log("json:", json)
         const apods = json.apods;
+        console.log("apods:", apods)
+        console.log("type:",typeof apods)
+        console.log("type:",typeof apods[0].title)
         const apodsContainer = document.getElementById('apods-container');
         createAPODCardHTML(apodsContainer, apods)
     } catch (error) {
@@ -88,4 +91,38 @@ function createAPODCardHTML(apodsContainer, apods) {
         `
         apodsContainer.appendChild(card)
     });
+}
+
+// modal contents settings
+let cardMap = new Map()
+
+// modal settings
+const modal = document.querySelector('[role="dialog"]');
+var backdrop = document.getElementById("backdrop")
+var slideOverPanel = document.getElementById("slide-over-panel")
+var closeBtn = document.getElementById("close-modal-button")
+
+closeBtn.onclick = function() {
+    hideModal()
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == backdrop) {
+    hideModal()
+  }
+}
+
+function openModal() {
+    modal.classList.remove("hidden")
+    backdrop.classList.add("opacity-100")
+    slideOverPanel.classList.remove("translate-x-full")
+    closeBtn.classList.add("opacity-100")
+}
+
+function hideModal() {
+    modal.classList.add("hidden")
+    backdrop.classList.remove("opacity-100")
+    slideOverPanel.classList.add("translate-x-full")
+    closeBtn.classList.remove("opacity-100")
 }
