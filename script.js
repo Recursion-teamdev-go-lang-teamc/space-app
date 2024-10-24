@@ -56,9 +56,11 @@ function createAPODCardHTML(apodContainer) {
                     <h2 class="mb-2 text-xl font-medium leading-tight">
                     ${apod.title}
                     </h2>
+                    /*
                     <p class="mb-4 text-sm">
                     ${apod.explanation}
                     </p>
+                    */
                 </div>
             </a>
         `
