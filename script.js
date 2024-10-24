@@ -67,22 +67,22 @@ function createAPODCardHTML(apodsContainer, apods) {
     // create Apod card html
     apods.forEach(apod => {
         const card = document.createElement("div")
-        card.className = "mx-3 mt-6 flex flex-col self-start rounded-lg shadow-xl"
+        card.className = "mx-3 mt-6 h-84 flex flex-col self-start rounded-lg shadow-xl overflow-hidden"
         card.innerHTML = `
             <a href="#!">
                 <img
-                    class="rounded-t-lg"
+                    class="rounded-t-lg w-full aspect-[16/9] object-cover"
                     src=${apod.hdurl}
                     alt=${apod.title}/>
                 <div class="text-white p-6">
-                    <h2 class="mb-2 text-xl font-medium leading-tight">
+                    <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                     ${apod.title}
                     </h2>
-                    /*
+                    <!--
                     <p class="mb-4 text-sm">
                     ${apod.explanation}
                     </p>
-                    */
+                    -->
                 </div>
             </a>
         `
