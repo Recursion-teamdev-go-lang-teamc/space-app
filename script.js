@@ -47,7 +47,6 @@ async function fetchAPODs() {
         }
 
         const json = await response.json();
-        console.log(json)
         const apods = json.apods;
         const apodsContainer = document.getElementById('apods-container');
         createAPODCardHTML(apodsContainer, apods)
@@ -65,25 +64,102 @@ function createAPODCardHTML(apodsContainer, apods) {
     // init apodsContainer.innerHTML
     apodsContainer.innerHTML = ``
     // create Apod card html
-    apods.forEach(apod => {
+    apods.forEach((apod, index) => {
+        cardMap.set(`card-${index}`, apod)  // set map {key, value} for modal panel
         const card = document.createElement("div")
-        card.className = "mx-3 mt-6 flex flex-col self-start rounded-lg shadow-xl"
+        card.className = "relative mx-3 mt-6 h-84 flex flex-col self-start rounded-lg overflow-hidden hover:opacity-60"
+        /*
         card.innerHTML = `
-            <a href="#!">
+            <a href="#!" onclick="getApodValue('card-${index}')">
                 <img
-                    class="rounded-t-lg"
+                    class="rounded-lg border-2 border-white w-full aspect-[16/9] object-cover"
+                    src=${apod.hdurl}
+                    alt=${apod.title}/>
+                <p class="absolute top-0 left-0 text-white text-2xl p-2 font-medium min-h-[3rem] line-clamp-2 leading-tight"
+                    style="-webkit-text-stroke: 1px black;">
+                ${apod.title}
+                </p>
+            </a>
+        `
+        */
+        card.innerHTML = `
+            <a href="#!" onclick="getApodValue('card-${index}')">
+                <img
+                    class="rounded-lg w-full aspect-[16/9] object-cover"
                     src=${apod.hdurl}
                     alt=${apod.title}/>
                 <div class="text-white p-6">
-                    <h2 class="mb-2 text-xl font-medium leading-tight">
+                    <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                     ${apod.title}
                     </h2>
+                    <!--
                     <p class="mb-4 text-sm">
                     ${apod.explanation}
                     </p>
+                    -->
                 </div>
             </a>
         `
         apodsContainer.appendChild(card)
     });
+}
+
+// modal contents settings
+let cardMap = new Map()
+
+function getApodValue(key) {
+    // update modal content
+    let apod = cardMap.get(key)
+    // const slideTitle = document.getElementById("slide-over-title")
+    const slideContent = document.getElementById("slide-over-content")
+
+    // slideTitle.innerHTML = apod.title
+    slideContent.innerHTML = `
+        <img
+            class="rounded-lg w-full aspect-[16/9] object-cover"
+            src=${apod.hdurl}
+            alt=${apod.title}/>
+        <div class="px-4 sm:px-6">
+            <h2 class="text-2xl font-semibold leading-6 text-gray-900 pt-4" id="slide-over-title">${apod.title}</h2>
+        </div>
+        <div class="text-black pt-6 text-xl">
+            <p>${apod.explanation}</p>
+        </div>
+    `
+
+    // open modal
+    openModal()
+}
+
+
+
+// modal settings
+const modal = document.querySelector('[role="dialog"]');
+var backdrop = document.getElementById("backdrop")
+var slideOverPanel = document.getElementById("slide-over-panel")
+var closeBtn = document.getElementById("close-modal-button")
+
+closeBtn.onclick = function() {
+    hideModal()
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == backdrop) {
+    hideModal()
+  }
+}
+
+function openModal() {
+    modal.classList.remove("hidden")
+    backdrop.classList.add("opacity-100")
+    slideOverPanel.classList.remove("translate-x-full")
+    closeBtn.classList.add("opacity-100")
+}
+
+function hideModal() {
+    modal.classList.add("hidden")
+    backdrop.classList.remove("opacity-100")
+    slideOverPanel.classList.add("translate-x-full")
+    closeBtn.classList.remove("opacity-100")
 }
