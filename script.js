@@ -110,11 +110,22 @@ let cardMap = new Map()
 function getApodValue(key) {
     // update modal content
     let apod = cardMap.get(key)
-    const slideTitle = document.getElementById("slide-over-title")
+    // const slideTitle = document.getElementById("slide-over-title")
     const slideContent = document.getElementById("slide-over-content")
 
-    slideTitle.innerHTML = apod.title
-    slideContent.innerHTML = apod.explanation
+    // slideTitle.innerHTML = apod.title
+    slideContent.innerHTML = `
+        <img
+            class="rounded-lg w-full aspect-[16/9] object-cover"
+            src=${apod.hdurl}
+            alt=${apod.title}/>
+        <div class="px-4 sm:px-6">
+            <h2 class="text-2xl font-semibold leading-6 text-gray-900 pt-4" id="slide-over-title">${apod.title}</h2>
+        </div>
+        <div class="text-black pt-6 text-xl">
+            <p>${apod.explanation}</p>
+        </div>
+    `
 
     // open modal
     openModal()
