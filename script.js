@@ -47,11 +47,7 @@ async function fetchAPODs() {
         }
 
         const json = await response.json();
-        console.log("json:", json)
         const apods = json.apods;
-        console.log("apods:", apods)
-        console.log("type:",typeof apods)
-        console.log("type:",typeof apods[0].title)
         const apodsContainer = document.getElementById('apods-container');
         createAPODCardHTML(apodsContainer, apods)
     } catch (error) {
@@ -68,13 +64,28 @@ function createAPODCardHTML(apodsContainer, apods) {
     // init apodsContainer.innerHTML
     apodsContainer.innerHTML = ``
     // create Apod card html
-    apods.forEach(apod => {
+    apods.forEach((apod, index) => {
+        cardMap.set(`card-${index}`, apod)  // set map {key, value} for modal panel
         const card = document.createElement("div")
-        card.className = "mx-3 mt-6 h-84 flex flex-col self-start rounded-lg shadow-xl overflow-hidden"
+        card.className = "relative mx-3 mt-6 h-84 flex flex-col self-start rounded-lg overflow-hidden hover:opacity-60"
+        /*
         card.innerHTML = `
-            <a href="#!">
+            <a href="#!" onclick="getApodValue('card-${index}')">
                 <img
-                    class="rounded-t-lg w-full aspect-[16/9] object-cover"
+                    class="rounded-lg border-2 border-white w-full aspect-[16/9] object-cover"
+                    src=${apod.hdurl}
+                    alt=${apod.title}/>
+                <p class="absolute top-0 left-0 text-white text-2xl p-2 font-medium min-h-[3rem] line-clamp-2 leading-tight"
+                    style="-webkit-text-stroke: 1px black;">
+                ${apod.title}
+                </p>
+            </a>
+        `
+        */
+        card.innerHTML = `
+            <a href="#!" onclick="getApodValue('card-${index}')">
+                <img
+                    class="rounded-lg w-full aspect-[16/9] object-cover"
                     src=${apod.hdurl}
                     alt=${apod.title}/>
                 <div class="text-white p-6">
@@ -95,6 +106,21 @@ function createAPODCardHTML(apodsContainer, apods) {
 
 // modal contents settings
 let cardMap = new Map()
+
+function getApodValue(key) {
+    // update modal content
+    let apod = cardMap.get(key)
+    const slideTitle = document.getElementById("slide-over-title")
+    const slideContent = document.getElementById("slide-over-content")
+
+    slideTitle.innerHTML = apod.title
+    slideContent.innerHTML = apod.explanation
+
+    // open modal
+    openModal()
+}
+
+
 
 // modal settings
 const modal = document.querySelector('[role="dialog"]');
