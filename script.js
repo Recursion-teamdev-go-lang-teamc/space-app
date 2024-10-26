@@ -1,3 +1,6 @@
+const apodContainer = document.getElementById('apod-container')
+const apodsContainer = document.getElementById('apods-container')
+
 async function fetchAPOD() {
     let url = new URL("http://localhost:8000/api/apod");
     const date = document.getElementById("date").value
@@ -15,18 +18,23 @@ async function fetchAPOD() {
             throw new Error(`response status: ${response.status}`);
         }
 
+        // clear apods container
+        apodsContainer.innerHTML = ``
+
         const json = await response.json();
-        console.log(json)
         const apod = json.apod;
-        const apodContainer = document.getElementById('apod-container');
-        apodContainer.innerHTML = `
+        apodContainer.innerHTML = createAPODHTML(apod)
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+function createAPODHTML(apod) {
+        return `
             <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
             <img class="py-2" src="${apod.hdurl}" alt="${apod.title}">
             <p class="text-white py-2">${apod.explanation}</p>
         `;
-    } catch (error) {
-        console.error(error.message);
-    }
 }
 
 async function fetchAPODs() {
@@ -46,42 +54,26 @@ async function fetchAPODs() {
             throw new Error(`response status: ${response.status}`);
         }
 
+        // clear apod container
+        apodContainer.innerHTML = ``
+        // init apodsContainer.innerHTML
+        apodsContainer.innerHTML = ``
+
         const json = await response.json();
         const apods = json.apods;
-        const apodsContainer = document.getElementById('apods-container');
-        createAPODCardHTML(apodsContainer, apods)
+        createAPODCardHTML(apods)
     } catch (error) {
         console.error(error.message);
     }
 }
-// APODSのカード形式テスト用関数
-async function createAPODS() {
-    const apodsContainer = document.getElementById('apods-container');
-    createAPODCardHTML(apodsContainer)
-}
 
-function createAPODCardHTML(apodsContainer, apods) {
-    // init apodsContainer.innerHTML
-    apodsContainer.innerHTML = ``
+function createAPODCardHTML(apods) {
+
     // create Apod card html
     apods.forEach((apod, index) => {
         cardMap.set(`card-${index}`, apod)  // set map {key, value} for modal panel
         const card = document.createElement("div")
         card.className = "relative mx-3 mt-6 h-84 flex flex-col self-start rounded-lg overflow-hidden hover:opacity-60"
-        /*
-        card.innerHTML = `
-            <a href="#!" onclick="getApodValue('card-${index}')">
-                <img
-                    class="rounded-lg border-2 border-white w-full aspect-[16/9] object-cover"
-                    src=${apod.hdurl}
-                    alt=${apod.title}/>
-                <p class="absolute top-0 left-0 text-white text-2xl p-2 font-medium min-h-[3rem] line-clamp-2 leading-tight"
-                    style="-webkit-text-stroke: 1px black;">
-                ${apod.title}
-                </p>
-            </a>
-        `
-        */
         card.innerHTML = `
             <a href="#!" onclick="getApodValue('card-${index}')">
                 <img
@@ -132,7 +124,6 @@ function getApodValue(key) {
 }
 
 
-
 // modal settings
 const modal = document.querySelector('[role="dialog"]');
 var backdrop = document.getElementById("backdrop")
@@ -163,3 +154,28 @@ function hideModal() {
     slideOverPanel.classList.add("translate-x-full")
     closeBtn.classList.remove("opacity-100")
 }
+
+// switch date view, list view
+const dateViewBtn = document.getElementById("date-view-button")
+const listViewBtn = document.getElementById("list-view-button")
+const apodBtn = document.getElementById("apod-button")
+const apodsListBtn = document.getElementById("apods-list-button")
+
+function selectDateViewButton() {
+    apodBtn.classList.remove("hidden")
+    apodsListBtn.classList.add("hidden")
+
+    dateViewBtn.classList.add("bg-sky-500")
+    listViewBtn.classList.remove("bg-sky-500")
+}
+
+function selectListViewButton() {
+    apodBtn.classList.add("hidden")
+    apodsListBtn.classList.remove("hidden")
+
+    dateViewBtn.classList.remove("bg-sky-500")
+    listViewBtn.classList.add("bg-sky-500")
+}
+
+// 初期状態は date View Button
+selectDateViewButton()
