@@ -1,3 +1,32 @@
+// カレンダーの最大日付
+const dateInput = document.getElementById("date");
+const today = new Date();
+const formatDate = `${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getDate().toString().padStart(2, '0')}/${today.getFullYear()}`;
+dateInput.setAttribute("datepicker-max-date", formatDate);
+
+// バリデーションエラー
+function validateDate () {
+    const date = document.getElementById("date").value;
+    const errorMessage = document.getElementById('error-message');
+    const [month, day, year] = date.split("/").map(Number);
+    const inputDate = new Date(year, month - 1, day);
+    const today = new Date();
+    const minDate = new Date('1995-06-19')
+
+    if (!isNaN(inputDate) && minDate <= inputDate && inputDate <= today) {
+        errorMessage.classList.add('invisible'); // エラーメッセージを非表示
+    } else if (date === '') {
+        errorMessage.classList.add('invisible');
+    } else {
+        errorMessage.innerHTML = `
+            06/20/1995 ~ ${formatDate}の範囲内の日付を入力してください
+        `;
+        errorMessage.classList.remove('invisible'); // エラーメッセージを表示
+    }
+}
+dateInput.addEventListener('blur', validateDate);
+dateInput.addEventListener('input', validateDate);
+
 async function fetchAPOD() {
     let url = new URL("http://localhost:8000/api/apod");
     const date = document.getElementById("date").value
@@ -19,14 +48,28 @@ async function fetchAPOD() {
         console.log(json)
         const apod = json.apod;
         const apodContainer = document.getElementById('apod-container');
+        if (apod.title === '') {
+            displayErrorMessage('指定した日付にデータが見つかりませんでした。別の日付をお試しください。');
+        }
         apodContainer.innerHTML = `
             <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
             <img class="py-2" src="${apod.hdurl}" alt="${apod.title}">
             <p class="text-white py-2">${apod.explanation}</p>
         `;
     } catch (error) {
+        if (error.message === "Failed to fetch") {
+            displayErrorMessage("ネットワークエラーが発生しました。接続を確認してください。");
+        } else {
+            displayErrorMessage("不明なエラーが発生しました。");
+        }
         console.error(error.message);
     }
+}
+function displayErrorMessage(message) {
+    const apodContainer = document.getElementById('apod-container');
+    apodContainer.innerHTML = `
+        <p class="text-red-500 text-sm mt-2">${message}</p>
+    `;
 }
 
 async function fetchAPODs() {
