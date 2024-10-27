@@ -11,8 +11,8 @@
 ## 技術スタック
 ### フロントエンド
 - HTML5
-- JavaScript
 - Tailwind CSS
+- JavaScript
 
 ### バックエンド
 - Go 1.23.2
