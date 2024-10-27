@@ -32,8 +32,8 @@ async function fetchAPOD() {
 function createAPODHTML(apod) {
         return `
             <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
-            <img class="py-2" src="${apod.hdurl}" alt="${apod.title}">
-            <p class="text-white py-2">${apod.explanation}</p>
+            <img class="py-2 max-w-2xl mx-auto" src="${apod.hdurl}" alt="${apod.title}">
+            <p class="text-white text-sm py-2 max-w-2xl">${apod.explanation}</p>
         `;
 }
 
