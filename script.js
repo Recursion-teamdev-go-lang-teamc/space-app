@@ -33,6 +33,7 @@ function createAPODHTML(apod) {
         return `
             <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
             <img class="py-2" src="${apod.hdurl}" alt="${apod.title}">
+            <p class="text-gray-400 text-xs">Image Credit: NASA</p>  <!-- クレジット表記 -->
             <p class="text-white py-2">${apod.explanation}</p>
         `;
 }
@@ -87,6 +88,7 @@ function createAPODCardHTML(apods) {
                         src=${apod.url}
                         alt=${apod.title}>
                     </iframe>
+                    <p class="text-gray-400 text-xs">Image Credit: NASA</p>  <!-- クレジット表記 -->
                     <div class="text-white p-6">
                         <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                         ${apod.title}
@@ -101,6 +103,7 @@ function createAPODCardHTML(apods) {
                         class="rounded-lg w-full aspect-[16/9] object-cover"
                         src=${apod.hdurl}
                         alt=${apod.title}/>
+                    <p class="text-gray-400 text-xs">Image Credit: NASA</p>  <!-- クレジット表記 -->
                     <div class="text-white p-6">
                         <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                         ${apod.title}
@@ -129,6 +132,7 @@ function getApodValue(key) {
                 src=${apod.url}
                 alt=${apod.title}>
             </iframe>
+            <p class="text-gray-400 text-xs">Image Credit: NASA</p>  <!-- クレジット表記 -->
             <div class="px-4 sm:px-6">
                 <h2 class="text-2xl font-semibold leading-6 text-gray-900 pt-4" id="slide-over-title">${apod.title}</h2>
             </div>
@@ -143,6 +147,7 @@ function getApodValue(key) {
                 class="rounded-lg w-full aspect-[16/9] object-cover"
                 src=${apod.hdurl}
                 alt=${apod.title}/>
+            <p class="text-gray-400 text-xs">Image Credit: NASA</p>  <!-- クレジット表記 -->
             <div class="px-4 sm:px-6">
                 <h2 class="text-2xl font-semibold leading-6 text-gray-900 pt-4" id="slide-over-title">${apod.title}</h2>
             </div>
