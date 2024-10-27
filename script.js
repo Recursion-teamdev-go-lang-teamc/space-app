@@ -102,24 +102,6 @@ function createAPODCardHTML(apodsContainer, apods) {
     });
 }
 
-function isYoutubeUrl(url) {
-    if (url.includes("youtube")) {
-        return true // youtube url
-    }
-    return false // other url
-}
-
-function getYoutubeThumbnailUrl(url) {
-    console.log(url)
-    const videoId = url.match(/embed\/([a-zA-Z0-9_-]{11})/)[1]
-
-    if (!videoId) {
-        throw new Error('No match found')
-    }
-
-    return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` // 中程度の画質のサムネイル画像を取得し、apod.hdurlに格納
-}
-
 // modal contents settings
 let cardMap = new Map()
 
