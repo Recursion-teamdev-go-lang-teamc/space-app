@@ -1,4 +1,4 @@
-# Space App
+# APOD (Astronomy Picture of the Day)
 本アプリケーションは、[NASA Open APIs](https://api.nasa.gov/)のAPOD (Astronomy Picture of the Day)を利用した天体写真ビューアです。バックエンドはGo言語で実装され、フロントエンドのデモアプリケーションではカレンダービューとギャラリービューを提供しています。
 
 https://github.com/user-attachments/assets/2218264f-6f84-4693-953e-0319fd9fbe1b
