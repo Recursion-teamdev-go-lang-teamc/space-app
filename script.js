@@ -71,27 +71,44 @@ function createAPODCardHTML(apods) {
 
     // create Apod card html
     apods.forEach((apod, index) => {
+        
         cardMap.set(`card-${index}`, apod)  // set map {key, value} for modal panel
         const card = document.createElement("div")
-        card.className = "relative mx-3 mt-6 h-84 flex flex-col self-start rounded-lg overflow-hidden hover:opacity-60"
-        card.innerHTML = `
-            <a href="#!" onclick="getApodValue('card-${index}')">
-                <img
-                    class="rounded-lg w-full aspect-[16/9] object-cover"
-                    src=${apod.hdurl}
-                    alt=${apod.title}/>
-                <div class="text-white p-6">
-                    <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
-                    ${apod.title}
-                    </h2>
-                    <!--
-                    <p class="mb-4 text-sm">
-                    ${apod.explanation}
-                    </p>
-                    -->
-                </div>
-            </a>
-        `
+        card.className = "relative mx-3 mt-6 h-84 flex flex-col self-start rounded-lg overflow-hidden "
+
+        // hdurl = ""の場合は画像以外がresponseで返却されている
+        if (apod.hdurl === "") {
+            console.log("embed")
+            // iframeで埋め込みを実装する
+            card.innerHTML = `
+                <a href="#!" class="hover:opacity-60" onclick="getApodValue('card-${index}')">
+                    <iframe
+                        class="pointer-events-none rounded-lg w-full aspect-[16/9] object-cover"
+                        src=${apod.url}
+                        alt=${apod.title}>
+                    </iframe>
+                    <div class="text-white p-6">
+                        <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
+                        ${apod.title}
+                        </h2>
+                    </div>
+                </a>
+            `
+        } else {
+            card.innerHTML = `
+                <a href="#!" class="hover:opacity-60" onclick="getApodValue('card-${index}')">
+                    <img
+                        class="rounded-lg w-full aspect-[16/9] object-cover"
+                        src=${apod.hdurl}
+                        alt=${apod.title}/>
+                    <div class="text-white p-6">
+                        <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
+                        ${apod.title}
+                        </h2>
+                    </div>
+                </a>
+            `
+        }
         apodsContainer.appendChild(card)
     });
 }
@@ -102,22 +119,39 @@ let cardMap = new Map()
 function getApodValue(key) {
     // update modal content
     let apod = cardMap.get(key)
-    // const slideTitle = document.getElementById("slide-over-title")
     const slideContent = document.getElementById("slide-over-content")
 
-    // slideTitle.innerHTML = apod.title
-    slideContent.innerHTML = `
-        <img
-            class="rounded-lg w-full aspect-[16/9] object-cover"
-            src=${apod.hdurl}
-            alt=${apod.title}/>
-        <div class="px-4 sm:px-6">
-            <h2 class="text-2xl font-semibold leading-6 text-gray-900 pt-4" id="slide-over-title">${apod.title}</h2>
-        </div>
-        <div class="text-black pt-6 text-xl">
-            <p>${apod.explanation}</p>
-        </div>
-    `
+    // 画像以外の場合
+    if (apod.hdurl === "") {
+        slideContent.innerHTML = `
+            <iframe
+                class="rounded-lg w-full aspect-[16/9] object-cover"
+                src=${apod.url}
+                alt=${apod.title}>
+            </iframe>
+            <div class="px-4 sm:px-6">
+                <h2 class="text-2xl font-semibold leading-6 text-gray-900 pt-4" id="slide-over-title">${apod.title}</h2>
+            </div>
+            <div class="text-black pt-6 text-xl">
+                <p>${apod.explanation}</p>
+            </div>
+        `
+    } else {
+        // 画像の場合
+        slideContent.innerHTML = `
+            <img
+                class="rounded-lg w-full aspect-[16/9] object-cover"
+                src=${apod.hdurl}
+                alt=${apod.title}/>
+            <div class="px-4 sm:px-6">
+                <h2 class="text-2xl font-semibold leading-6 text-gray-900 pt-4" id="slide-over-title">${apod.title}</h2>
+            </div>
+            <div class="text-black pt-6 text-xl">
+                <p>${apod.explanation}</p>
+            </div>
+        `
+    }
+
 
     // open modal
     openModal()
