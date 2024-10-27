@@ -62,12 +62,6 @@ async function fetchAPOD() {
     }
 }
 
-function displayErrorMessage(message) {
-    apodContainer.innerHTML = `
-        <p class="text-red-500 text-sm mt-2">${message}</p>
-    `;
-}
-
 function createAPODHTML(apod) {
         return `
             <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
