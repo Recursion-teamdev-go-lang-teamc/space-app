@@ -41,6 +41,7 @@ function createAPODHTML(apod) {
                 alt=${apod.title}
                 allowfullscreen>
             </iframe>
+            <p class="text-gray-400 text-xs">Image Credit: NASA</p>  <!-- クレジット表記 -->
             <p class="text-white text-sm py-2 max-w-2xl">${apod.explanation}</p>
         `;
     }
