@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"log/slog"
 	"net/http"
 	"net/url"
@@ -16,27 +15,27 @@ import (
 )
 
 const (
-	apodURL = "https://api.nasa.gov/planetary/apod"
-	count   = 10
+	apodURL          = "https://api.nasa.gov/planetary/apod"
+	defaultApodCount = 10
 )
 
-var apiKey = loadAPIKEY()
+var apiKey = loadAPIKey()
 
 type Apod struct {
-	CopyRight       string `json:"copyright"`
-	Date            string `json:"date"`
-	Explanation     string `json:"explanation"`
-	Hdurl           string `json:"hdurl"`
-	Media_type      string `json:"media_type"`
-	Service_version string `json:"service_version"`
-	Title           string `json:"title"`
-	Url             string `json:"url"`
+	CopyRight      string `json:"copyright"`
+	Date           string `json:"date"`
+	Explanation    string `json:"explanation"`
+	Hdurl          string `json:"hdurl"`
+	MediaType      string `json:"media_type"`
+	ServiceVersion string `json:"service_version"`
+	Title          string `json:"title"`
+	Url            string `json:"url"`
 }
 
-func loadAPIKEY() string {
+func loadAPIKey() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		slog.Error("Error loading .env file", "error", err)
 	}
 	apiKey := os.Getenv("API_KEY")
 	return apiKey
@@ -44,18 +43,20 @@ func loadAPIKEY() string {
 
 func apodsHandler(w http.ResponseWriter, r *http.Request) {
 
-	apods := make([]Apod, count)
+	apods := make([]Apod, defaultApodCount)
 
 	date, err := getDateFromQuery(r)
 	if err != nil {
 		slog.Error("Date format error", "error", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
 	}
 
-	body, err := fetchApodData(date, count)
+	body, err := fetchApodData(date, defaultApodCount)
 	if err != nil {
 		slog.Error("Error fetching APOD data", "error", err)
-		http.Error(w, "Servicee Unavailable", http.StatusServiceUnavailable)
+		http.Error(w, "Service Unavailable", http.StatusServiceUnavailable)
+		return
 	} else {
 		slog.Info("Fetch APOD data")
 	}
@@ -63,6 +64,7 @@ func apodsHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, &apods); err != nil {
 		slog.Error("Unmarshal error", "error", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 
 	response := map[string][]Apod{
@@ -84,18 +86,21 @@ func apodHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		slog.Error("Date format error", "error", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
 	}
 
 	body, err := fetchApodData(date, 0)
 	if err != nil {
 		slog.Error("Error fetching APOD data", "error", err)
-		http.Error(w, "Bad Request", http.StatusServiceUnavailable)
+		http.Error(w, "Service Unavailable", http.StatusServiceUnavailable)
+		return
 	} else {
 		slog.Info("Fetch APOD data")
 	}
 
 	if err := json.Unmarshal(body, &apod); err != nil {
 		slog.Error("Unmarshal error", "error", err)
+		return
 	}
 
 	response := map[string]Apod{
@@ -117,30 +122,30 @@ func getDateFromQuery(r *http.Request) (string, error) {
 	return "", nil
 }
 
-func fetchApodData(date string, count int) ([]byte, error) {
+func fetchApodData(apodDate string, apodCount int) ([]byte, error) {
 
-	var body []byte
-
-	nasaAPIURL, err := buildApodURL(date, count)
+	nasaAPIURL, err := buildApodURL(apodDate, apodCount)
 	if err != nil {
-		slog.Error("APOD URL build Error", "error", err)
-		return body, err
+		slog.Error("Failed to build APOD URL", "error", err)
+		return nil, err
 	}
-
-	fmt.Println(nasaAPIURL)
 
 	res, err := http.Get(nasaAPIURL)
 	if err != nil {
-		return body, err
+		slog.Error("Failed to fetch APOD data", "error", err)
+		return nil, err
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return body, fmt.Errorf("NASA API returns non 200 status: %d", res.StatusCode)
+		err := fmt.Errorf("NASA API returns non 200 status: %d", res.StatusCode)
+		slog.Error("Failed to fetch APOD data", "error", err)
+		return nil, err
 	}
 
-	body, err = io.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
+		slog.Error("Failed to read response body", "error", err)
 		return body, err
 	}
 
@@ -148,7 +153,7 @@ func fetchApodData(date string, count int) ([]byte, error) {
 
 }
 
-func buildApodURL(date string, count int) (string, error) {
+func buildApodURL(apodDate string, apodCount int) (string, error) {
 
 	nasaAPIURL, err := url.Parse(apodURL)
 	if err != nil {
@@ -157,9 +162,9 @@ func buildApodURL(date string, count int) (string, error) {
 
 	nasaAPIQuery := nasaAPIURL.Query()
 	nasaAPIQuery.Set("api_key", apiKey)
-	nasaAPIQuery.Set("date", date)
-	if count != 0 {
-		nasaAPIQuery.Set("count", strconv.Itoa(count))
+	nasaAPIQuery.Set("date", apodDate)
+	if apodCount != 0 {
+		nasaAPIQuery.Set("count", strconv.Itoa(apodCount))
 		nasaAPIQuery.Set("date", "")
 	}
 
