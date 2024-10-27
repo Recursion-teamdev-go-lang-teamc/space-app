@@ -30,11 +30,28 @@ async function fetchAPOD() {
 }
 
 function createAPODHTML(apod) {
+    // hdurl = ""の場合は画像以外がresponseで返却されている
+    if (apod.hdurl === "") {
+        return `
+        
+            <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
+            <iframe
+                class="max-w-2xl w-full aspect-[16/9] mx-auto"
+                src=${apod.url}
+                alt=${apod.title}
+                allowfullscreen>
+            </iframe>
+            <p class="text-white text-sm py-2 max-w-2xl">${apod.explanation}</p>
+        `;
+    }
+    else {
+
         return `
             <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
             <img class="py-2" src="${apod.hdurl}" alt="${apod.title}">
             <p class="text-white py-2">${apod.explanation}</p>
         `;
+    }
 }
 
 async function fetchAPODs() {
