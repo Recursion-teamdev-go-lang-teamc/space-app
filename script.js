@@ -1,3 +1,6 @@
+const apodContainer = document.getElementById('apod-container')
+const apodsContainer = document.getElementById('apods-container')
+
 async function fetchAPOD() {
     let url = new URL("http://localhost:8000/api/apod");
     const date = document.getElementById("date").value
@@ -15,18 +18,23 @@ async function fetchAPOD() {
             throw new Error(`response status: ${response.status}`);
         }
 
+        // clear apods container
+        apodsContainer.innerHTML = ``
+
         const json = await response.json();
-        console.log(json)
         const apod = json.apod;
-        const apodContainer = document.getElementById('apod-container');
-        apodContainer.innerHTML = `
+        apodContainer.innerHTML = createAPODHTML(apod)
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+function createAPODHTML(apod) {
+        return `
             <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
             <img class="py-2" src="${apod.hdurl}" alt="${apod.title}">
             <p class="text-white py-2">${apod.explanation}</p>
         `;
-    } catch (error) {
-        console.error(error.message);
-    }
 }
 
 async function fetchAPODs() {
@@ -46,18 +54,21 @@ async function fetchAPODs() {
             throw new Error(`response status: ${response.status}`);
         }
 
+        // clear apod container
+        apodContainer.innerHTML = ``
+
         const json = await response.json();
         const apods = json.apods;
-        const apodsContainer = document.getElementById('apods-container');
-        createAPODCardHTML(apodsContainer, apods)
+        createAPODCardHTML(apods)
     } catch (error) {
         console.error(error.message);
     }
 }
 
-function createAPODCardHTML(apodsContainer, apods) {
+function createAPODCardHTML(apods) {
     // init apodsContainer.innerHTML
     apodsContainer.innerHTML = ``
+
     // create Apod card html
     apods.forEach((apod, index) => {
         
@@ -147,12 +158,11 @@ function getApodValue(key) {
 }
 
 
-
 // modal settings
 const modal = document.querySelector('[role="dialog"]');
-var backdrop = document.getElementById("backdrop")
-var slideOverPanel = document.getElementById("slide-over-panel")
-var closeBtn = document.getElementById("close-modal-button")
+const backdrop = document.getElementById("backdrop")
+const slideOverPanel = document.getElementById("slide-over-panel")
+const closeBtn = document.getElementById("close-modal-button")
 
 closeBtn.onclick = function() {
     hideModal()
@@ -178,3 +188,28 @@ function hideModal() {
     slideOverPanel.classList.add("translate-x-full")
     closeBtn.classList.remove("opacity-100")
 }
+
+// switch date view, list view
+const dateViewBtn = document.getElementById("date-view-button")
+const listViewBtn = document.getElementById("list-view-button")
+const apodBtn = document.getElementById("apod-button")
+const apodsListBtn = document.getElementById("apods-list-button")
+
+function selectDateViewButton() {
+    apodBtn.classList.remove("hidden")
+    apodsListBtn.classList.add("hidden")
+
+    dateViewBtn.classList.add("bg-sky-500")
+    listViewBtn.classList.remove("bg-sky-500")
+}
+
+function selectListViewButton() {
+    apodBtn.classList.add("hidden")
+    apodsListBtn.classList.remove("hidden")
+
+    dateViewBtn.classList.remove("bg-sky-500")
+    listViewBtn.classList.add("bg-sky-500")
+}
+
+// 初期状態は date View Button
+selectDateViewButton()
