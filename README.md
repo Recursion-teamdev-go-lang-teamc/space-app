@@ -56,8 +56,20 @@ go run main.go
 バックエンドAPIの詳細な仕様は[Swagger UI](https://recursion-teamdev-go-lang-teamc.github.io/space-app/swagger/)で確認できます。
 
 ## ライセンス
-[ライセンス情報を記載]
 
+### アプリケーションコード
+本プロジェクトは[MIT License](LICENSE)の下で公開されています
+
+### NASA APIコンテンツ
+本アプリケーションで表示される天体写真およびその説明文は、[NASA API](https://api.nasa.gov/)から取得しています
+NASA APIのコンテンツは以下の条件で使用されています：
+
+- NASA APIの利用規約に従い、すべての画像とデータはNASAに帰属します
+- NASAは一般的に、そのイメージ、映像、オーディオファイルを教育または情報提供目的で使用することを推奨しています
+- NASA APIから取得したコンテンツの使用にあたっては、以下のクレジット表記が必要です：
+  > Image Credit: NASA
+
+詳細なNASAのメディア使用ガイドラインは[NASA Media Usage Guidelines](https://www.nasa.gov/nasa-brand-center/images-and-media/)を参照してください
 ## 貢献について
 [コントリビューションガイドラインを記載]
 
