@@ -56,8 +56,6 @@ async function fetchAPODs() {
 
         // clear apod container
         apodContainer.innerHTML = ``
-        // init apodsContainer.innerHTML
-        apodsContainer.innerHTML = ``
 
         const json = await response.json();
         const apods = json.apods;
@@ -68,6 +66,8 @@ async function fetchAPODs() {
 }
 
 function createAPODCardHTML(apods) {
+    // init apodsContainer.innerHTML
+    apodsContainer.innerHTML = ``
 
     // create Apod card html
     apods.forEach((apod, index) => {
@@ -126,9 +126,9 @@ function getApodValue(key) {
 
 // modal settings
 const modal = document.querySelector('[role="dialog"]');
-var backdrop = document.getElementById("backdrop")
-var slideOverPanel = document.getElementById("slide-over-panel")
-var closeBtn = document.getElementById("close-modal-button")
+const backdrop = document.getElementById("backdrop")
+const slideOverPanel = document.getElementById("slide-over-panel")
+const closeBtn = document.getElementById("close-modal-button")
 
 closeBtn.onclick = function() {
     hideModal()
