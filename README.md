@@ -1,31 +1,97 @@
-# space-app
-本リポジトリは、[Nasa API](https://api.nasa.gov/)よりAPOD:Astrinomy Picture of the Dayを取得するbackendと、
-その使用例となるdemo appを実装したものである。
+# Space App
+本アプリケーションは、(NASA Open APIs)[https://api.nasa.gov/]のAPOD (Astronomy Picture of the Day)を利用した天体写真ビューアです。バックエンドはGo言語で実装され、フロントエンドのデモアプリケーションではカレンダービューとギャラリービューを提供しています。
 
-=== ToDo デモ動画を載せる ===
+=== ToDo: デモ動画を載せる ===
 
-# 使用方法
+## 特徴
+- 日付指定での天体写真表示
+- ランダムな天体写真のギャラリービュー
+- レスポンシブデザイン
+- 軽量で高速なGo言語バックエンド
 
-### Nasa APIよりAPI Keyの取得
-- https://api.nasa.gov/にて、API Keyを取得
-![image](https://github.com/user-attachments/assets/11eb69ed-142d-4bfa-abc5-e2357d28f972)
+## 技術スタック
+### フロントエンド
+- HTML5
+- JavaScript
+- Tailwind CSS
 
-- `./space-app`ディレクトリ直下に`.env`を作成し、API Keyを記述
-```
+### バックエンド
+- Go 1.21
+- [依存ライブラリがあれば記載]
+
+## セットアップ手順
+
+### 1. 前提条件
+- Go 1.21以上
+- モダンなWebブラウザ（Chrome, Firefox, Safari等）
+- NASA APIのAPI Key
+
+### 2. NASA APIキーの取得
+1. [NASA API Portal](https://api.nasa.gov/)にアクセス
+2. フォームに必要情報を入力してAPI Keyを取得
+3. プロジェクトルート直下に`.env`ファイルを作成し、以下を記述:
+```bash
 API_KEY=your_api_key
 ```
 
-### HTTP Server立ち上げ
-```go
+### 3. アプリケーションの起動
+#### バックエンドサーバーの起動
+```bash
 go run main.go
 ```
+デフォルトでは`localhost:8080`で起動します。
 
-### demo App立ち上げ
-`index.html`をブラウザで開く
+#### フロントエンドの表示
+`index.html`をWebブラウザで開いてください。
 
-# Frontend: Demo App
+## 機能説明
 
-# Backend: Swagger API Document
-https://recursion-teamdev-go-lang-teamc.github.io/space-app/swagger/
+### Date View（カレンダービュー）
+- 指定した日付のAPODを表示
+- 写真の詳細説明を確認可能
+- 前日・翌日の写真へ簡単に移動可能
 
-# 
+### List View（ギャラリービュー）
+- ランダムに選ばれた8つのAPODをグリッド表示
+- 写真をクリックで詳細表示
+- 新しいセットの読み込みが可能
+
+## API ドキュメント
+バックエンドAPIの詳細な仕様は[Swagger UI](https://recursion-teamdev-go-lang-teamc.github.io/space-app/swagger/)で確認できます。
+
+## 開発者向け情報
+### ローカル開発環境のセットアップ
+[開発環境のセットアップ手順を記載]
+
+### テスト実行
+[テストの実行方法を記載]
+
+## ライセンス
+[ライセンス情報を記載]
+
+## 貢献について
+[コントリビューションガイドラインを記載]
+
+## 著者
+[作者情報を記載]
+
+## 謝辞
+- [NASA API](https://api.nasa.gov/)の提供する素晴らしいサービス
+```
+
+追加で記載すべき内容：
+1. 開発環境のセットアップ手順の詳細
+2. テストの実行方法と網羅性
+3. エラーハンドリングの説明
+4. パフォーマンス特性
+5. セキュリティ考慮事項
+6. トラブルシューティングガイド
+7. 変更履歴（CHANGELOG）
+8. コードの品質基準
+9. CI/CDパイプラインの説明
+10. スケーラビリティに関する情報
+11. 既知の課題やバグ
+12. 今後の開発予定
+13. コントリビューションガイドライン
+
+これらの情報を追加することで、より完全なドキュメントになります。
