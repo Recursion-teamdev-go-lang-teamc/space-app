@@ -61,9 +61,6 @@ async function fetchAPOD() {
         }
         apodContainer.innerHTML = createAPODHTML(apod)
     } catch (error) {
-        if (error.message === "Failed to fetch") {
-            displayErrorMessage("ネットワークエラーが発生しました。接続を確認してください。");
-        }
         console.error(error.message);
     }
 }
