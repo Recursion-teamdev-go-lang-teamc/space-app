@@ -70,11 +70,11 @@ NASA APIのコンテンツは以下の条件で使用されています：
   > Image Credit: NASA
 
 詳細なNASAのメディア使用ガイドラインは[NASA Media Usage Guidelines](https://www.nasa.gov/nasa-brand-center/images-and-media/)を参照してください
-## 貢献について
-[コントリビューションガイドラインを記載]
 
 ## 著者
-[作者情報を記載]
+- [stshf](https://github.com/stshf)
+- [mumiso710](https://github.com/mumiso710)
+- [5103246](https://github.com/5103246)
 
 ## 謝辞
 - [NASA Open APIs](https://api.nasa.gov/)に感謝を申し上げる
