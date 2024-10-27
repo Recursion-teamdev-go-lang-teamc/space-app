@@ -56,9 +56,6 @@ async function fetchAPOD() {
 
         const json = await response.json();
         const apod = json.apod;
-        if (apod.title === '') {
-            displayErrorMessage('指定した日付にデータが見つかりませんでした。別の日付をお試しください。');
-        }
         apodContainer.innerHTML = createAPODHTML(apod)
     } catch (error) {
         console.error(error.message);
