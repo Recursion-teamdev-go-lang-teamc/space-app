@@ -26,7 +26,7 @@
 ### 2. NASA APIキーの取得
 1. [NASA API Portal](https://api.nasa.gov/)にアクセス
 2. フォームに必要情報を入力してAPI Keyを取得
-3. プロジェクトルート直下に`.env`ファイルを作成し、以下を記述:
+3. プロジェクトルート直下に`.env`ファイルを作成し、ファイル内に以下を記述(your_api_keyを変更してください)
 ```bash
 API_KEY=your_api_key
 ```
