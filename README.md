@@ -64,7 +64,7 @@ go run main.go
 本アプリケーションで表示される天体写真およびその説明文は、[NASA API](https://api.nasa.gov/)から取得しています
 NASA APIのコンテンツは以下の条件で使用されています：
 - NASA APOD APIの利用規約に従い、copyrightがあるものは帰属先を明記し、ないものはパブリックドメインとして公開されています
-  - 詳細はこちらを確認ください(https://github.com/nasa/apod-api)
+  - 詳細はこちらを確認ください https://github.com/nasa/apod-api
 
 ## 著者
 - [stshf](https://github.com/stshf)
