@@ -77,6 +77,8 @@ function createAPODCardHTML(apods) {
         const card = document.createElement("div")
         card.className = "relative mx-3 mt-6 h-84 flex flex-col self-start rounded-lg overflow-hidden "
 
+        let copyright = createCopyrightHTML(apod)
+
         // hdurl = ""の場合は画像以外がresponseで返却されている
         if (apod.hdurl === "") {
             console.log("embed")
@@ -88,7 +90,7 @@ function createAPODCardHTML(apods) {
                         src=${apod.url}
                         alt=${apod.title}>
                     </iframe>
-                    <p class="text-gray-400 text-xs">Image Credit: NASA</p>  <!-- クレジット表記 -->
+                    ${copyright}
                     <div class="text-white p-6">
                         <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                         ${apod.title}
@@ -103,7 +105,7 @@ function createAPODCardHTML(apods) {
                         class="rounded-lg w-full aspect-[16/9] object-cover"
                         src=${apod.hdurl}
                         alt=${apod.title}/>
-                    <p class="text-gray-400 text-xs">Image Credit: NASA</p>  <!-- クレジット表記 -->
+                    ${copyright}
                     <div class="text-white p-6">
                         <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                         ${apod.title}
@@ -114,6 +116,13 @@ function createAPODCardHTML(apods) {
         }
         apodsContainer.appendChild(card)
     });
+}
+
+function createCopyrightHTML(apod) {
+    if (apod.copyright === "")
+        return ""
+    else 
+        return `<p class="text-gray-400 text-xs">Image Credit: ${apod.copyright}</p>  <!-- クレジット表記 -->`
 }
 
 // modal contents settings
