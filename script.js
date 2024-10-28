@@ -58,8 +58,15 @@ async function fetchAPOD() {
         const apod = json.apod;
         apodContainer.innerHTML = createAPODHTML(apod)
     } catch (error) {
+        displayErrorMessage("予期せぬエラーが発生しました。再度お試しください。");
         console.error(error.message);
     }
+}
+
+function displayErrorMessage(message) {
+    apodContainer.innerHTML = `
+        <p class="text-red-500 text-sm mt-2">${message}</p>
+    `;
 }
 
 function createAPODHTML(apod) {
