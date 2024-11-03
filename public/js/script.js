@@ -75,7 +75,7 @@ function createAPODHTML(apod) {
     // hdurl = ""の場合は画像以外がresponseで返却されている
     if (apod.hdurl === "") {
         return `
-            <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
+            <h2 class="text-center text-2xl py-2">${apod.title}</h2>
             <iframe
                 class="max-w-2xl w-full aspect-[16/9] mx-auto"
                 src=${apod.url}
@@ -83,15 +83,15 @@ function createAPODHTML(apod) {
                 allowfullscreen>
             </iframe>
             ${copyright}
-            <p class="text-white text-sm py-2 max-w-2xl">${apod.explanation}</p>
+            <p class="text-left text-sm py-2 max-w-2xl">${apod.explanation}</p>
         `;
     }
     else {
         return `
-            <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
-            <img class="py-2 max-w-2xl mx-auto" src="${apod.hdurl}" alt="${apod.title}">
+            <h2 class="text-2xl py-2">${apod.title}</h2>
+            <img class="py-2 max-w-2xl w-full aspect-[16/9] mx-auto" src="${apod.hdurl}" alt="${apod.title}">
             ${copyright}
-            <p class="text-white text-sm py-2 max-w-2xl">${apod.explanation}</p>
+            <p class="text-left text-sm py-2 max-w-2xl">${apod.explanation}</p>
         `;
     }
 }
@@ -149,7 +149,7 @@ function createAPODCardHTML(apods) {
                         alt=${apod.title}>
                     </iframe>
                     ${copyright}
-                    <div class="text-white p-6">
+                    <div class="p-6">
                         <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                         ${apod.title}
                         </h2>
@@ -164,7 +164,7 @@ function createAPODCardHTML(apods) {
                         src=${apod.hdurl}
                         alt=${apod.title}/>
                     ${copyright}
-                    <div class="text-white p-6">
+                    <div class="p-6">
                         <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                         ${apod.title}
                         </h2>
