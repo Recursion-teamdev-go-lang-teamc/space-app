@@ -34,7 +34,7 @@ API_KEY=your_api_key
 ### 3. アプリケーションの起動
 #### バックエンドサーバーの起動
 ```bash
-go run main.go
+go run cmd/server/main.go
 ```
 デフォルトでは`localhost:8000`で起動します。
 
