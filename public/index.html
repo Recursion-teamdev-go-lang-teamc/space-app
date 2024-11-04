@@ -13,22 +13,22 @@
   <div id="main-container" class="relative isolate px-6 lg:px-8 min-h-screen bg-gradient-to-t from-sky-800 to-sky-950">
     <div class="text-center text-white mx-auto py-8 sm:py-16 lg:py-24 ">
       <!-- タイトル -->
-      <h1 class="text-2xl font-bold tracking-tight mb-5 sm:text-4xl">
+      <h1 class="text-2xl font-bold tracking-tight mb-5 md:text-4xl">
         Astronomy Picture Of the Day
       </h1>
 
       <!-- View切り替えボタン -->
-      <div class="flex flex-row rounded-lg w-64 sm:w-96 mx-auto">
+      <div class="flex flex-row rounded-lg w-48 md:w-96 mx-auto">
         <button type="button" id="date-view-button" onclick="selectDateViewButton()"
-          class="basis-1/2 flex items-center justify-center inset-y-0 start-0 gap-2 px-3.5 py-1 ps-3 rounded-l-lg border border-sky-500 bg-sky-700 shadow-sm text-sm font-semibold hover:bg-sky-400 hover:scale-[1.05]">
-          <svg class="w-4 h-4 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          class="basis-1/2 flex items-center justify-center inset-y-0 start-0 gap-2 px-1 md:px-3.5 py-1 rounded-l-lg border border-sky-500 bg-sky-700 shadow-sm text-xs md:text-sm font-semibold hover:bg-sky-400 hover:scale-[1.05]">
+          <svg class="size-3 md:size-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
           </svg>
           Date View
         </button>
         <button type="button" id="list-view-button" onclick="selectListViewButton()"
-          class="basis-1/2 flex items-center justify-center inset-y-0 start-0 gap-2 px-3.5 py-1 ps-3 rounded-r-lg border border-sky-500 bg-sky-700 shadow-sm text-sm font-semibold hover:bg-sky-400 hover:scale-[1.05]">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          class="basis-1/2 flex items-center justify-center inset-y-0 start-0 gap-2 px-1 md:px-3.5 py-1 rounded-r-lg border border-sky-500 bg-sky-700 shadow-sm text-xs md:text-sm font-semibold hover:bg-sky-400 hover:scale-[1.05]">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3 md:size-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
           </svg>
           List View
@@ -36,21 +36,21 @@
       </div>
 
       <!-- リクエストエラーメッセージ表示 -->
-      <div class="my-3 flex items-center justify-center gap-x-6"> 
+      <div class="my-2 flex items-center justify-center gap-x-6"> 
         <p id="error-message" class="text-red-500 text-sm mt-2 invisible"></p>
       </div>
 
       <!-- date button -->
-      <div id="apod-button" class="flex flex-row box-border border rounded-lg overflow-hidden w-64 sm:w-96 mx-auto">
-        <input datepicker placeholder="Select Date" id="date" class="basis-3/4 text-center">
+      <div id="apod-button" class="flex flex-row box-border border rounded-lg overflow-hidden w-48 md:w-96 mx-auto">
+        <input datepicker placeholder="Select Date" id="date" class="basis-3/4 text-xs md:text-sm text-center text-black">
         <button type="button" onclick="fetchAPOD()"
-            class="text-white basis-1/4 bg-sky-600 px-3.5 py-1 text-sm rounded-r-lg font-semibold shadow-sm hover:bg-sky-500">
+            class="basis-1/4 px-1 md:px-3.5 py-1 text-xs md:text-sm rounded-r-lg font-semibold shadow-sm bg-sky-600 hover:bg-sky-500">
             APOD!
         </button>
       </div>
       <!-- List button -->
       <button id="apods-list-button" type="button" onclick="fetchAPODs()"
-        class="text-white w-30 box-border border rounded-lg bg-sky-600 px-3.5 py-1 text-sm text-white font-semibold shadow-sm hover:bg-sky-500 hidden">
+        class="w-30 box-border border rounded-lg bg-sky-600 px-2 md:px-3.5 py-1 text-xs md:text-sm font-semibold shadow-sm hover:bg-sky-500 hidden">
         Display APODs List!
       </button>
 
@@ -63,38 +63,35 @@
       <div id="apods-container" class="grid grid-cols-1 md:grid-cols-4 justify-center gap-4">
         <!-- 画像表示エリア -->
       </div>
+
     </div>
 
-    <!-- modal element -->
-    <div class="relative z-10 hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-      <!-- Background backdrop -->
-      <div id="backdrop" class="fixed inset-0 backdrop-blur-sm bg-opacity-75 transition-opacity opacity-0 pointer-events-auto" aria-hidden="true"></div>
+  </div>
 
-      <div class="fixed inset-y-0 right-0 overflow-hidden">
-        <div class="pointer-events-auto fixed inset-y-0 right-0 flex max-w-full pl-10">
-          <!-- close button(x) -->
-          <div id="close-modal-button" class="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4 translate-x-full opacity-0">
-            <button type="button" class="relative rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
-              <span class="absolute -inset-2.5"></span>
-              <span class="sr-only">Close panel</span>
-              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
-            </button>
+  <!-- modal element -->
+  <div class="relative z-10 hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+    <!-- Background backdrop -->
+    <div id="backdrop" class="fixed inset-0 backdrop-blur-sm bg-opacity-75 transition-opacity opacity-0 pointer-events-auto" aria-hidden="true"></div>
+    <div class="pointer-events-auto fixed inset-y-0 right-0 flex max-w-full pl-10">
+      <!-- close button(x) -->
+      <div id="close-modal-button" class="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4 translate-x-full opacity-0">
+        <button type="button" class="relative rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
+          <span class="absolute -inset-2.5"></span>
+          <span class="sr-only">Close panel</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <!-- Slide Over Panel -->
+      <div id="slide-over-panel" class="pointer-events-auto relative w-screen max-w-3xl translate-x-full">
+        <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+          <div id="slide-over-content" class="relative mt-6 flex-1 px-4 sm:px-6">
+          <!-- Panel content -->
           </div>
-          <!-- Slide Over Panel -->
-          <div id="slide-over-panel" class="pointer-events-auto relative w-screen max-w-3xl translate-x-full">
-            <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-              <!-- Panel content -->
-              <div id="slide-over-content" class="relative mt-6 flex-1 px-4 sm:px-6"></div>
-            </div>
-          </div>
-
         </div>
       </div>
-
-    </div> <!-- modal content end-->
-
+    </div>
   </div>
 
 </body>
