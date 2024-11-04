@@ -75,7 +75,7 @@ function createAPODHTML(apod) {
     // hdurl = ""の場合は画像以外がresponseで返却されている
     if (apod.hdurl === "") {
         return `
-            <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
+            <h2 class="text-sm md:text-2xl py-2">${apod.title}</h2>
             <iframe
                 class="max-w-2xl w-full aspect-[16/9] mx-auto"
                 src=${apod.url}
@@ -83,15 +83,15 @@ function createAPODHTML(apod) {
                 allowfullscreen>
             </iframe>
             ${copyright}
-            <p class="text-white text-sm py-2 max-w-2xl">${apod.explanation}</p>
+            <p class="text-left text-xs md:text-sm py-2 max-w-2xl">${apod.explanation}</p>
         `;
     }
     else {
         return `
-            <h2 class="text-white text-center text-2xl py-2">${apod.title}</h2>
-            <img class="py-2 max-w-2xl mx-auto" src="${apod.hdurl}" alt="${apod.title}">
+            <h2 class="text-sm md:text-2xl py-2">${apod.title}</h2>
+            <img class="py-2 max-w-2xl w-full aspect-[16/9] mx-auto" src="${apod.hdurl}" alt="${apod.title}">
             ${copyright}
-            <p class="text-white text-sm py-2 max-w-2xl">${apod.explanation}</p>
+            <p class="text-left text-xs md:text-sm py-2 max-w-2xl">${apod.explanation}</p>
         `;
     }
 }
@@ -149,8 +149,8 @@ function createAPODCardHTML(apods) {
                         alt=${apod.title}>
                     </iframe>
                     ${copyright}
-                    <div class="text-white p-6">
-                        <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
+                    <div class="p-2 md:p-4">
+                        <h2 class="mb-2 text-sm md:text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                         ${apod.title}
                         </h2>
                     </div>
@@ -164,8 +164,8 @@ function createAPODCardHTML(apods) {
                         src=${apod.hdurl}
                         alt=${apod.title}/>
                     ${copyright}
-                    <div class="text-white p-6">
-                        <h2 class="mb-2 text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
+                    <div class="p-2 md:p-4">
+                        <h2 class="mb-2 text-sm md:text-xl font-medium min-h-[3rem] line-clamp-2 leading-tight">
                         ${apod.title}
                         </h2>
                     </div>
@@ -202,10 +202,8 @@ function getApodValue(key) {
                 alt=${apod.title}>
             </iframe>
             ${copyright}
-            <div class="px-4 sm:px-6">
-                <h2 class="text-2xl font-semibold leading-6 text-gray-900 pt-4" id="slide-over-title">${apod.title}</h2>
-            </div>
-            <div class="text-black pt-6 text-xl">
+            <h2 class="text-xl md:text-2xl font-semibold leading-6 text-gray-900 pt-2 md:pt-3" id="slide-over-title">${apod.title}</h2>
+            <div class="text-black pt-6 text-sm md:text-xl">
                 <p>${apod.explanation}</p>
             </div>
         `
@@ -217,10 +215,8 @@ function getApodValue(key) {
                 src=${apod.hdurl}
                 alt=${apod.title}/>
             ${copyright}
-            <div class="px-4 sm:px-6">
-                <h2 class="text-2xl font-semibold leading-6 text-gray-900 pt-4" id="slide-over-title">${apod.title}</h2>
-            </div>
-            <div class="text-black pt-6 text-xl">
+            <h2 class="text-xl md:text-2xl font-semibold leading-6 text-gray-900 pt-2 md:pt-3" id="slide-over-title">${apod.title}</h2>
+            <div class="text-black pt-2 md:pt-6 text-sm md:text-xl">
                 <p>${apod.explanation}</p>
             </div>
         `
